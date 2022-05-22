@@ -17,7 +17,7 @@ from requests.adapters import HTTPAdapter
 
 
 def get_company_info():
-    with open('F:/python_project/gjl_stock_system/price/stock_dict.json', 'r') as rf:
+    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/stock_dict.json', 'r') as rf:
         temp = json.load(rf)
     stocks = list(temp.keys())
     browser = webdriver.Chrome(executable_path=r'C:\Program Files\Google\Chrome\Application\chromedriver.exe')
@@ -45,7 +45,7 @@ def get_company_info():
                     else:
                         info['other'] = [titles, contents]
 
-            with open('F:/python_project/gjl_stock_system/price/data/company_info/'+stock_code+'.json', 'w') as sf:
+            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/company_info/'+stock_code+'.json', 'w') as sf:
                 json.dump(info, sf)
         except Exception as e:
             print(stock_code, url, e)
@@ -54,12 +54,12 @@ def get_company_info():
 
 
 def get_minute_price():
-    with open('F:/python_project/gjl_stock_system/price/stock_dict.json', 'r') as rf:
+    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/stock_dict.json', 'r') as rf:
         temp = json.load(rf)
 
     for stock_code in temp.keys():
-        if os.path.exists('F:/python_project/gjl_stock_system/price/data/minute_price/' + stock_code + '.json'):
-            with open('F:/python_project/gjl_stock_system/price/data/minute_price/' + stock_code + '.json', 'r') as rf:
+        if os.path.exists('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/minute_price/' + stock_code + '.json'):
+            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/minute_price/' + stock_code + '.json', 'r') as rf:
                 data = json.load(rf)
             last_day = data['days'][-1]
         else:
@@ -99,7 +99,7 @@ def get_minute_price():
                 else:
                     continue
 
-            with open('F:/python_project/gjl_stock_system/price/data/minute_price/' + stock_code + '.json', 'w') as sf:
+            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/minute_price/' + stock_code + '.json', 'w') as sf:
                 json.dump(data, sf)
         except Exception as e:
             print(stock_code, 'error', e)
@@ -108,7 +108,7 @@ def get_minute_price():
 
 
 def get_history_price():
-    with open('F:/python_project/gjl_stock_system/price/data/stock_code_list.json', 'r') as rf:
+    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/stock_code_list.json', 'r') as rf:
         stock_code_list = json.load(rf)
     # stock_code_list = ['bj430047']
     start_date = "19700101"
@@ -145,7 +145,7 @@ def get_history_price():
                     }
                 }
             }
-            with open('F:/python_project/gjl_stock_system/price/data/history_price/'+stock_code+'.json', 'w') as sf:
+            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/history_price/'+stock_code+'.json', 'w') as sf:
                 json.dump(history_price, sf)
         except Exception as e:
             print(stock_code, 'error', e)
@@ -470,7 +470,7 @@ def get_news_info():
 
             print(title, type_name, len(data[title][type_name]))
 
-    with open('F:/python_project/gjl_stock_system/price/data/news/20220315.json', 'w') as sf:
+    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/news/20220315.json', 'w') as sf:
         json.dump(data, sf)
 
 
@@ -485,7 +485,7 @@ if __name__ == '__main__':
 
     # get_company_info()
 
-    # with open('F:/python_project/gjl_stock_system/price/data/company_info/sz300435.json', 'r') as rf:
+    # with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/company_info/sz300435.json', 'r') as rf:
     #     temp = json.load(rf)
     #
     # for key in temp.keys():

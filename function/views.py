@@ -95,7 +95,7 @@ def get_update_news(deadline, next_start_time):
                 else:
                     length -= 1
             # settings.PRICE_ROOT + 'data/news/js_news.json'
-            with open('F:/python_project/gjl_stock_system/price/data/news/js_news.json', 'w') as sf:
+            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/news/js_news.json', 'w') as sf:
                 json.dump(news_list_daily, sf)
             print(length, len(news_list_daily))
             time.sleep(max(0, 50-now[5]))

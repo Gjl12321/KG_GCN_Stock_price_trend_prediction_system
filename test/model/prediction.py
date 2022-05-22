@@ -317,7 +317,7 @@ def main():
 
 
 if __name__ == '__main__':
-    # with open('F:/python_project/gjl_stock_system/price/stock_dict.json', 'r') as rf:
+    # with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/stock_dict.json', 'r') as rf:
     #     temp = json.load(rf)
     # stocks = temp.keys()
     stocks = ['sh688223']
