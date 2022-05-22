@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{#页面标题#}
+{% block title %}股票预测{% endblock %}
+
+{% block header_extends %}
+{% endblock %}
+
+{#页面内容#}
+{% block content %}
+    <div class="predict-container">
+        {{ result }}
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        window.onload = function () {}
+    </script>
+{% endblock %}

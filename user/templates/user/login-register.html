@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# 页面标题 #}
+{% block title %}
+    股票投资辅助系统 | 登录 注册
+{% endblock %}
+
+{# 拓展 #}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/login-register.css' %}">
+{% endblock %}
+
+{# 导航栏 #}
+{% block menu-link-first %}
+    is-active
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    <div class="main-container">
+        {% if not user.is_authenticated %}
+            <div id="popLayer">
+                <div id="popBox">
+                    <div class="form-container sign-up-container">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <h1 class="form-title">注册账号</h1>
+                            <div class="social-container">
+                                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                            <span>或者使用邮箱登陆！</span>
+                            {% for field in reg_form %}
+                                {{ field }}
+                                <p class="text-danger">{{ field.errors.as_text }}</p>
+                            {% endfor %}
+                            <span class="pull-left text-danger">{{ reg_form.non_field_errors }}</span>
+                            <button>注册</button>
+                        </form>
+                    </div>
+                    <div class="form-container sign-in-container">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <h1 class="form-title">登录</h1>
+                            <div class="social-container">
+                                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                            <span>或者使用账号密码登录！</span>
+                            {% for field in login_form %}
+                                {{ field }}
+                                <p class="text-danger">{{ field.errors.as_text }}</p>
+                            {% endfor %}
+                            <span class="pull-left text-danger">{{ login_form.non_field_errors }}</span>
+                            <a href="#">忘记密码？</a>
+                            <button>登录</button>
+                        </form>
+                    </div>
+                    <div class="overlay-container">
+                        <div class="overlay">
+                            <div class="overlay-panel overlay-left">
+                                <h1 class="form-title">欢迎回来</h1>
+                                <p class="form-info">请使用您的个人信息登录！</p>
+                                <button class="ghost" id="signIn">登录</button>
+                            </div>
+                            <div class="overlay-panel overlay-right">
+                                <h1 class="form-title">朋友，你好！</h1>
+                                <p class="form-info">填写个人信息，开启您的私人定制！</p>
+                                <button class="ghost" id="signUp">注册</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="close-details"></div>
+                </div>
+            </div>
+        {% else %}
+            <span>已登录，跳转到首页...</span>
+            <script type="text/javascript">
+                window.location.href = '/';
+            </script>
+        {% endif %}
+    </div>
+
+    <script>
+        // 登录注册
+        document.getElementById('signUp').addEventListener('click', () => {
+            document.getElementById('popBox').classList.add("right-panel-active");
+        });
+        document.getElementById('signIn').addEventListener('click', () => {
+            document.getElementById('popBox').classList.remove("right-panel-active");
+        });
+    </script>
+{% endblock %}
+
+
+
+
+

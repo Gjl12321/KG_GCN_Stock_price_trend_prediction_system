@@ -1,0 +1,25 @@
+authorName: gjl
+experimentName: pytorch_mulit_lstm
+#是trail的并发数，这个需要根据自己的GPU数量设置
+trialConcurrency: 1
+maxExecDuration: 10d
+maxTrialNum: 10000
+#choice: local, remote, pai
+trainingServicePlatform: local
+searchSpacePath: search_space.json
+#choice: true, false
+useAnnotation: false
+tuner:
+  #choice: TPE, Random, Anneal, Evolution, BatchTuner, MetisTuner, GPTuner
+  #SMAC (SMAC should be installed through nnictl)
+#  builtinTunerName: TPE
+#  classArgs:
+#    #choice: maximize, minimize
+#    optimize_mode: maximize
+  builtinTunerName: GridSearch
+trial:
+  command: python 2_nni.py
+  codeDir: .
+  gpuNum: 1
+localConfig:
+  useActiveGpu: true

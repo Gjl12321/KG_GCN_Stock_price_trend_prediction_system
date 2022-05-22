@@ -1,0 +1,441 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{#页面标题#}
+{% block title %}
+    {{ stock_obj.stock_name }}
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'stock/stock-detail.css' %}">
+    <script src="{% static '/js/echarts.js' %}"></script>
+    <script src="{% static '/js/echarts.min.js' %}"></script>
+{% endblock %}
+
+{#页面内容#}
+{% block content %}
+    <div class="detail-container">
+        <div class="main-nav">
+            <div class="title-content">
+                <div style="font-size: 28px">{{ stock_obj.stock_name }}</div>
+                <div style="font-size: 22px">({{ stock_obj.stock_code }})</div>
+            </div>
+            {# <span>标签</span> #}
+        </div>
+        <div class="main-content">
+            {# 总览 #}
+            <div class="stock-overview">
+                <div class="stock-new-price">
+                    {% if summary_data.diff_price > 0 %}
+                        <div class="price-up" style="font-size: 32px; text-align: center; line-height: 60px;">
+                            <span>{{ summary_data.new_price | floatformat:2 }}</span>
+                            <span style="font-size: 35px; margin-top: 10px;" class="glyphicon glyphicon-arrow-up"></span>
+                        </div>
+                        <div class="price-up" style="float: left; font-size: 20px;">+{{ summary_data.diff_price | floatformat:2 }}</div>
+                        <div class="price-up" style="float: right; font-size: 20px;">+{{ summary_data.diff_ratio | floatformat:2 }}%</div>
+                    {% else %}
+                        <div class="price-down" style="font-size: 32px; text-align: center; line-height: 60px;">
+                            <span>{{ summary_data.new_price | floatformat:2 }}</span>
+                            <span style="font-size: 35px; margin-top: 10px;" class="glyphicon glyphicon-arrow-down"></span>
+                        </div>
+                        <div class="price-down" style="float: left; font-size: 20px;">{{ summary_data.diff_price | floatformat:2 }}</div>
+                        <div class="price-down" style="float: right; font-size: 20px;">{{ summary_data.diff_ratio | floatformat:2 }}%</div>
+                    {% endif %}
+                </div>
+                <div class="stock-other-price">
+                    <table style="margin: 0 auto">
+                        <tr>
+                            <td align="left">今日开盘:</td>
+                            <td align="left">{{ summary_data.open | floatformat:2 }}</td>
+                            <td align="left">成交量:</td>
+                            <td align="left">{{ summary_data.volumes }}</td>
+                            <td align="left">振幅:</td>
+                            <td align="left">{{ summary_data.amplitude | floatformat:2 }}%</td>
+                        </tr>
+                        <tr>
+                            <td align="left">昨日收盘:</td>
+                            <td align="left">{{ summary_data.close | floatformat:2 }}</td>
+                            <td align="left">成交额:</td>
+                            <td align="left">{{ summary_data.turnover }}</td>
+                            <td align="left">换手率:</td>
+                            <td align="left">{{ summary_data.turnover_ratio | floatformat:2 }}%</td>
+                        </tr>
+                        <tr>
+                            <td align="left">最高价格:</td>
+                            <td align="left">{{ summary_data.high | floatformat:2 }}</td>
+                            <td align="left">总市值:</td>
+                            <td align="left">{{ summary_data.total_value }}</td>
+                            <td align="left">市净率:</td>
+                            <td align="left">{{ summary_data.ptb_ratio | floatformat:2 }}</td>
+                        </tr>
+                        <tr>
+                            <td align="left">最低价格:</td>
+                            <td align="left">{{ summary_data.low | floatformat:2 }}</td>
+                            <td align="left">流通值:</td>
+                            <td align="left">{{ summary_data.circulation_value }}</td>
+                            <td align="left">市盈率:</td>
+                            <td align="left">{{ summary_data.pe_ratio | floatformat:2 }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            {# 内容 #}
+            <div class="stock-content">
+                {# 图像 #}
+                <div class="stock-img">
+                    <div class="stock-img-title">股票K线图</div>
+                    <div id="stock-Echarts" style=""></div>
+                </div>
+
+                {# 新闻 #}
+                <div class="stock-news">
+                    <div class="stock-news-title">个股新闻</div>
+                    <div class="stock-news-contain">
+                        <div class="float-sign" onclick="get_prior_news()">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </div>
+                        <div class="stock-news-card">
+                            <div id="news-card-1-title" class="stock-news-card__subtext">敬请期待！</div>
+                            <span id="news-card-1-time"></span>
+                            <a id="news-card-1-url" href="#">原文链接</a>
+                        </div>
+                        <div class="stock-news-card">
+                            <div id="news-card-2-title" class="stock-news-card__subtext">敬请期待！</div>
+                            <span id="news-card-2-time"></span>
+                            <a id="news-card-2-url" href="#">原文链接</a>
+                        </div>
+                        <div class="stock-news-card">
+                            <div id="news-card-3-title" class="stock-news-card__subtext">敬请期待！</div>
+                            <span id="news-card-3-time"></span>
+                            <a id="news-card-3-url" href="#">原文链接</a>
+                        </div>
+                        <div class="float-sign" onclick="get_next_news()">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </div>
+                    </div>
+                </div>
+
+                {# 公司信息 #}
+                <div class="stock-detail">
+                    <div class="company-title">公司信息</div>
+                    <div class="company-contain">
+                        <table id="company-info">
+                            <tbody>
+                                {% for info in company %}
+                                    <tr>
+                                        <td style="width: 25%">{{ info.key }}</td>
+                                        <td style="width: 75%;">{{ info.value }}</td>
+                                    </tr>
+                                {% empty %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        var news = [];
+        var news_index = 0;
+        var news_len = 0;
+
+        window.onload=function(){
+            initEcharts();
+            try {
+                this.news = [
+                    {% for news in stock_news %}
+                        {
+                            'title': '{{ news.title }}',
+                            'content': '{{ news.content }}',
+                            'public_time': '{{ news.public_time }}',
+                            'url': '{{ news.url }}',
+                        },
+                    {% endfor %}
+                ];
+                this.news_len = this.news.length;
+            } catch(err) {
+                this.news = [];
+            }
+            initNews();
+        }
+        function initEcharts(){
+            var chartDom = document.getElementById('stock-Echarts');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+            const labelFont = 'bold 14px Sans-serif';
+            function calculateMA(dayCount, data) {
+                let result = [];
+                for (let i = 0, len = data.length; i < len; i++) {
+                    if (i < dayCount) {
+                        result.push('-');
+                        continue;
+                    }
+                    let sum = 0;
+                    for (let j = 0; j < dayCount; j++) {
+                        sum += +data[i - j][1];
+                    }
+                    result.push((sum / dayCount).toFixed(2));
+                }
+                return result;
+            }
+
+            const dates = {% if history_price.dates %}{{ history_price.dates|safe }}{% else %}[]{% endif %}
+            const data = {% if history_price.dates %}{{ history_price.data|safe }}{% else %}[]{% endif %}
+            const volumes = {% if history_price.dates %}{{ history_price.volumes|safe }}{% else %}[]{% endif %}
+            const dataMA5 = calculateMA(5, data);
+            const dataMA10 = calculateMA(10, data);
+            const dataMA20 = calculateMA(20, data);
+
+            option = {
+                animation: false,
+                color: colorList,
+                title: {},
+                legend: {
+                    top: 10,
+                    data: ['日K', 'MA5', 'MA10', 'MA20']
+                },
+                tooltip: {
+                    triggerOn: 'click',
+                    transitionDuration: 0,
+                    confine: false,
+                    borderRadius: 4,
+                    borderWidth: 1,
+                    borderColor: '#333',
+                    backgroundColor: 'rgba(255,255,255,0.9)',
+                    textStyle: {
+                        fontSize: 12,
+                        color: '#333'
+                    },
+                    position: function (pos, params, el, elRect, size) {
+                        const obj = { top: 60 };
+                        obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 5;
+                        return obj;
+                    }
+                },
+                axisPointer: { link: [ { xAxisIndex: [0, 1] } ] },
+                dataZoom: [
+                    {
+                        type: 'slider',
+                        xAxisIndex: [0, 1],
+                        realtime: false,
+                        start: 95,
+                        end: 100,
+                        top: 30,
+                        height: 20,
+                        handleSize: '120%'
+                    }
+                ],
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: dates,
+                        boundaryGap: false,
+                        axisLine: { lineStyle: { color: '#777' } },
+                        axisLabel: { formatter: function (value) { return echarts.format.formatTime('MM-dd', value); } },
+                        min: 'dataMin',
+                        max: 'dataMax',
+                        axisPointer: { show: true }
+                    }, {
+                        type: 'category',
+                        gridIndex: 1,
+                        data: dates,
+                        boundaryGap: false,
+                        splitLine: { show: false },
+                        axisLabel: { show: false },
+                        axisTick: { show: false },
+                        axisLine: { lineStyle: { color: '#777' } },
+                        min: 'dataMin',
+                        max: 'dataMax',
+                        axisPointer: {
+                            type: 'shadow',
+                            label: { show: false },
+                            triggerTooltip: true,
+                            handle: {
+                                show: false,
+                                margin: 10,
+                                color: '#B80C00'
+                            }
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        scale: true,
+                        splitNumber: 2,
+                        axisLine: { lineStyle: { color: '#777' } },
+                        splitLine: { show: true },
+                        axisTick: { show: false },
+                        axisLabel: {
+                            inside: true,
+                            formatter: '{value}\n'
+                        }
+                    }, {
+                        scale: true,
+                        gridIndex: 1,
+                        splitNumber: 2,
+                        axisLabel: { show: false },
+                        axisLine: { show: false },
+                        axisTick: { show: false },
+                        splitLine: { show: false }
+                    }
+                ],
+                grid: [
+                    {
+                        left: 20,
+                        right: 20,
+                        top: 80,
+                        height: 180
+                    }, {
+                        left: 10,
+                        right: 10,
+                        height: 40,
+                        top: 290
+                    }
+                ],
+                graphic: [
+                    {
+                        type: 'group',
+                        left: 'center',
+                        top: 70,
+                        width: 300,
+                        bounding: 'raw',
+                        children: [
+                            {
+                                id: 'MA5',
+                                type: 'text',
+                                style: { fill: colorList[1], font: labelFont },
+                                left: 0
+                            }, {
+                                id: 'MA10',
+                                type: 'text',
+                                style: { fill: colorList[2], font: labelFont },
+                                left: 'center'
+                            }, {
+                                id: 'MA20',
+                                type: 'text',
+                                style: { fill: colorList[3], font: labelFont },
+                                right: 0
+                            }
+                        ]
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Volume',
+                        type: 'bar',
+                        data: volumes,
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        itemStyle: { color: '#7fbe9e' },
+                        emphasis: { itemStyle: { color: '#140' } },
+                    }, {
+                        name: '日K',
+                        type: 'candlestick',
+                        data: data,
+                        itemStyle: {
+                            color: '#ef232a',
+                            color0: '#14b143',
+                            borderColor: '#ef232a',
+                            borderColor0: '#14b143'
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: 'black',
+                                color0: '#444',
+                                borderColor: 'black',
+                                borderColor0: '#444'
+                            }
+                        }
+                    }, {
+                        name: 'MA5',
+                        type: 'line',
+                        data: dataMA5,
+                        smooth: true,
+                        showSymbol: false,
+                        lineStyle: { width: 1 }
+                    }, {
+                        name: 'MA10',
+                        type: 'line',
+                        data: dataMA10,
+                        smooth: true,
+                        showSymbol: false,
+                        lineStyle: { width: 1 }
+                    }, {
+                        name: 'MA20',
+                        type: 'line',
+                        data: dataMA20,
+                        smooth: true,
+                        showSymbol: false,
+                        lineStyle: { width: 1 }
+                    }
+                ]
+            };
+            option && myChart.setOption(option);
+        }
+        function toStock(stock_pk_str) {
+            {#点击跳转详情页面#}
+            document.getElementById(stock_pk_str).click();
+        }
+        function initNews(){
+            if (this.news_index < this.news_len) {
+                document.getElementById('news-card-1-title').innerText = this.news[this.news_index]['title'];
+                document.getElementById('news-card-1-time').innerText = this.news[this.news_index]['public_time'];
+                document.getElementById('news-card-1-url').href = this.news[this.news_index]['url'];
+                document.getElementById('news-card-1-url').innerText = '原文链接';
+            } else {
+                document.getElementById('news-card-1-title').innerText = '敬请期待！';
+                document.getElementById('news-card-1-time').innerText = '';
+                document.getElementById('news-card-1-url').innerText = '';
+                document.getElementById('news-card-1-url').href = '#';
+            }
+            if (this.news_index + 1 < this.news_len) {
+                document.getElementById('news-card-2-title').innerText = this.news[this.news_index + 1]['title'];
+                document.getElementById('news-card-2-time').innerText = this.news[this.news_index + 1]['public_time'];
+                document.getElementById('news-card-2-url').href = this.news[this.news_index + 1]['url'];
+                document.getElementById('news-card-2-url').innerText = '原文链接';
+            } else {
+                document.getElementById('news-card-2-title').innerText = '敬请期待！';
+                document.getElementById('news-card-2-time').innerText = '';
+                document.getElementById('news-card-2-url').innerText = '';
+                document.getElementById('news-card-2-url').href = '#';
+            }
+            if (this.news_index + 2 < this.news_len) {
+                document.getElementById('news-card-3-title').innerText = this.news[this.news_index + 2]['title'];
+                document.getElementById('news-card-3-time').innerText = this.news[this.news_index + 2]['public_time'];
+                document.getElementById('news-card-3-url').href = this.news[this.news_index + 2]['url'];
+                document.getElementById('news-card-3-url').innerText = '原文链接';
+            } else {
+                document.getElementById('news-card-3-title').innerText = '敬请期待！';
+                document.getElementById('news-card-3-time').innerText = '';
+                document.getElementById('news-card-3-url').innerText = '';
+                document.getElementById('news-card-3-url').href = '#';
+            }
+        }
+        function get_prior_news(){
+            if (this.news_index - 3 >= 0 && this.news_index - 3 < this.news_len) {
+                this.news_index = this.news_index - 3;
+                initNews();
+            } else {
+                console.log(this.news_len);
+            }
+        }
+        function get_next_news(){
+            if (this.news_index + 3 < this.news_len) {
+                this.news_index = this.news_index + 3;
+                initNews();
+            } else {
+                console.log(this.news_len);
+            }
+        }
+    </script>
+{% endblock %}
+
+

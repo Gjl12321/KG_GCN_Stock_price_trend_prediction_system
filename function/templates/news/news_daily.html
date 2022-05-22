@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{#页面标题#}
+{% block title %}
+    {% if type_name == 'js' %} 金十最新资讯 {% else %} 财联社新闻 {% endif %}
+{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'news/news_list.css' %}">
+{% endblock %}
+
+{#页面内容#}
+{% block content %}
+    <div class="news-list-container">
+        {# 新闻导航 #}
+        <div class="news-list-nav" style="">
+            <div class="news-nav-item nav-1">
+                {% if type_name == 'js' %}
+                    <a class="nav-1 news-item-link" href="#">金十数据</a>
+                {% else %}
+                    <a class="nav-1 news-item-link" href="#">财联社新闻</a>
+                {% endif %}
+            </div>
+
+            <div class="news-nav-item nav-2">
+                <a class="nav-2 news-item-link" href="#">全部</a>
+            </div>
+        </div>
+
+        {# 新闻主体 #}
+        <div class="news-list-main" style="">
+            <ul class="news-list-exhibit">
+                {% for news_item in news_list %}
+                    <li class="news-item" style="height: {{ news_item.height }}px">
+                        <div class="news-item-date" style="line-height: {{ news_item.line_height }}px">{{ news_item.date }}</div>
+                        <div class="news-item-content"><span>{{ news_item.content }}</span></div>
+                        <div class="news-item-other" style="line-height: {{ news_item.line_height }}px"><span class="glyphicon glyphicon-option-vertical"></span></div>
+                    </li>
+                {% empty %}
+                    <li class="news-item" style="height: {{ 0 }}px"></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        window.onload=function(){
+        }
+    </script>
+{% endblock %}
+

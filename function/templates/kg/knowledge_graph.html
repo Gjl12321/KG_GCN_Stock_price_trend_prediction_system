@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{#页面标题#}
+{% block title %}股票知识图谱{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'kg/knowledge_graph.css' %}">
+    <script src="{% static 'kg/echarts.js' %}"></script>
+{% endblock %}
+
+{#页面内容#}
+{% block content %}
+    <div class="kg-container">
+        <div class="main-content">
+            <div class="kg-nav">
+                <div class="kg-nav-title">查询股票关系</div>
+                <div class="kg-nav-search">
+                    <form class="search-left" action="{% url 'knowledge_graph' %}">
+                        <div style="width: 80%; max-width: 420px; float: left;">
+                            <div class="kg-search-span">股票</div>
+                            <label>
+                                <input class="kg-search-input" type="text" name="stock1" placeholder="股票名称或代码" autocomplete="off" />
+                            </label>
+                            <div class="kg-search-span">股票</div>
+                            <label>
+                                <input class="kg-search-input" type="text" name="stock2" placeholder="股票名称或代码" autocomplete="off" />
+                            </label>
+                        </div>
+
+                        <div style="float: right; margin: 0 auto; padding: 20px 0;">
+                            <input class="kg-search-submit" style="" type="submit" value="查询" />
+                        </div>
+                    </form>
+
+                    <div class="search-right">
+                        {% for i in history %}
+                            <div>
+                                <a href="{% url 'knowledge_graph' %}?stock1={{ i.stock_1 }}&stock2={{ i.stock_2 }}">
+                                    {{ i.stock_1 }}
+                                    {% if i.stock_2 %}
+                                        - {{ i.stock_2 }}
+                                    {% else %}
+                                    {% endif %}
+                                </a>
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div id="Echarts" class="kg-img"></div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        var data = [
+            {% for node in nodes %}
+                {
+                    name: '{{ node.name }}',
+                    des: '{{ node.name | slice:":4" }}',
+                    category: '{{ node.category }}',
+                },
+            {% endfor %}
+        ]
+        var links = [
+            {% for link in links %}
+                {
+                    source: '{{ link.source }}',
+                    target: '{{ link.target }}',
+                    name: '{{ link.value }}',
+                    des: '{{ link.value }}',
+                    symbolSize: 10
+                },
+            {% endfor %}
+        ]
+        var categories = [
+            {% for category in categories %}
+                {
+                    name: '{{ category.name }}',
+                    itemStyle: { normal: { color: '{{ category.color }}' } }
+                },
+            {% endfor %}
+        ]
+
+        window.onload = function () {
+            initEcharts();
+        }
+
+        function initEcharts() {
+            var chartDom = document.getElementById('Echarts');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                },
+                animationDurationUpdate: 1500,
+                animationEasingUpdate: 'quinticInOut',
+                label: {
+                    normal: {
+                        show: true,
+                        textStyle: {
+                            fontSize: 12
+                        },
+                    }
+                },
+                legend: {
+                    x: "center",
+                    show: false
+                },
+                series: [
+                    {
+                        type: 'graph',
+                        layout: 'force',
+                        symbolSize: 45,
+                        roam: true,
+                        emphasis: { focus: 'adjacency'},
+                        edgeSymbol: ['none', 'arrow'],
+                        categories: categories,
+                        label: {
+                            normal: {
+                                show: true,
+                                position: '',
+                                formatter: function(x){
+                                    return x.data.des;
+                                },
+                                textStyle: {
+                                    fontSize: 12,
+                                },
+                            }
+                        },
+                        force: {
+                            repulsion: 1000
+                        },
+                        edgeSymbolSize: [4, 50],
+                        edgeLabel: {
+                            normal: {
+                                show: true,
+                                position: 'middle',
+                                formatter: function (x) { return x.data.name; },
+                                textStyle: {
+                                    fontSize: 10
+                                },
+                            }
+                        },
+                        data: data,
+                        links: links,
+                        lineStyle: {
+                            normal: {
+                                opacity: 0.9,
+                                width: 1.3,
+                                curveness: 0,
+                                color: "#262626",
+                            }
+                        }
+                    }
+                ]
+            };
+
+            option && myChart.setOption(option);
+        }
+    </script>
+{% endblock %}

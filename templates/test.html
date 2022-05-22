@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}股票投资辅助系统 | 首页{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/test.css' %}">
+{% endblock %}
+
+
+{# 页面内容 #}
+{% block content %}
+    <div class="detail-container">
+        <div class="main-nav">
+            <div class="title-content">
+                <div style="font-size: 28px">{{ stock_obj.stock_name }}</div>
+                <div style="font-size: 22px">({{ stock_obj.stock_code }})</div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="stock-overview">
+                <div class="stock-new-price">
+                    {% if summary_data.diff_price > 0 %}
+                        <div class="price-up" style="font-size: 36px; text-align: center; line-height: 60px;">
+                            <span>{{ summary_data.new_price | floatformat:2 }}</span>
+                            <span style="font-size: 35px; margin-top: 10px;" class="glyphicon glyphicon-arrow-up"></span>
+                        </div>
+                        <div class="price-up" style="float: left; font-size: 20px;">+{{ summary_data.diff_price | floatformat:2 }}</div>
+                        <div class="price-up" style="float: right; font-size: 20px;">+{{ summary_data.diff_ratio | floatformat:2 }}%</div>
+                    {% else %}
+                        <div class="price-down" style="font-size: 36px; text-align: center; line-height: 60px;">
+                            <span>{{ summary_data.new_price | floatformat:2 }}</span>
+                            <span style="font-size: 35px; margin-top: 10px;" class="glyphicon glyphicon-arrow-down"></span>
+                        </div>
+                        <div class="price-down" style="float: left; font-size: 20px;">{{ summary_data.diff_price | floatformat:2 }}</div>
+                        <div class="price-down" style="float: right; font-size: 20px;">{{ summary_data.diff_ratio | floatformat:2 }}%</div>
+                    {% endif %}
+                </div>
+                <div class="stock-other-price">
+                    <table style="margin: 0 auto">
+                        <tr>
+                            <td align="left">今日开盘:</td>
+                            <td align="left">{{ summary_data.open | floatformat:2 }}</td>
+                            <td align="left">成交量:</td>
+                            <td align="left">{{ summary_data.volumes }}</td>
+                            <td align="left">振幅:</td>
+                            <td align="left">{{ summary_data.amplitude | floatformat:2 }}%</td>
+                        </tr>
+                        <tr>
+                            <td align="left">昨日收盘:</td>
+                            <td align="left">{{ summary_data.close | floatformat:2 }}</td>
+                            <td align="left">成交额:</td>
+                            <td align="left">{{ summary_data.turnover }}</td>
+                            <td align="left">换手率:</td>
+                            <td align="left">{{ summary_data.turnover_ratio | floatformat:2 }}%</td>
+                        </tr>
+                        <tr>
+                            <td align="left">最高价格:</td>
+                            <td align="left">{{ summary_data.high | floatformat:2 }}</td>
+                            <td align="left">总市值:</td>
+                            <td align="left">{{ summary_data.total_value }}</td>
+                            <td align="left">市净率:</td>
+                            <td align="left">{{ summary_data.ptb_ratio | floatformat:2 }}</td>
+                        </tr>
+                        <tr>
+                            <td align="left">最低价格:</td>
+                            <td align="left">{{ summary_data.low | floatformat:2 }}</td>
+                            <td align="left">流通值:</td>
+                            <td align="left">{{ summary_data.circulation_value }}</td>
+                            <td align="left">市盈率:</td>
+                            <td align="left">{{ summary_data.pe_ratio | floatformat:2 }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        var news = [];
+        var news_index = 0;
+        var news_len = 0;
+
+        window.onload=function(){
+
+        }
+    </script>
+{% endblock %}

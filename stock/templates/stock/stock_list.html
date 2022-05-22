@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# 页面标题 #}
+{% block title %}股票列表{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'stock/stock-list.css' %}">
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    {# 股票分类栏 #}
+    <div class="category-bar">
+        <ul class="ul-1">
+            <li class="li-1">
+                <div class="title-1" onclick="dropDownList('stock-class-1', '')">行业分类</div>
+                <hr style="width: 80%;" />
+                <ul id="stock-class-1" class="ul-2" style="display: none;">
+                    <li class="li-2">
+                        <div class="title-2" onclick="dropDownList('stock-class-1-1', 'stock-class-1')">申万一级行业</div>
+                        <hr style="width: 60%;" />
+                        <ul id="stock-class-1-1" class="ul-3" style="display: none;">
+                            <li class="li-3">
+                                {% for class_1 in class_of_stock.shenwan_1 %}
+                                    <a id="shenwan_1-{{ class_1 }}" href="/stock/shenwan_1-{{ class_1 }}"></a>
+                                    <div class="title-3" onclick="toStock('shenwan_1-{{ class_1 }}')">{{ class_1 }}</div>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="li-2">
+                        <div class="title-2" onclick="dropDownList('stock-class-1-2', 'stock-class-1')">申万二级行业</div>
+                        <hr style="width: 60%;" />
+                        <ul id="stock-class-1-2" class="ul-3" style="display: none;">
+                            <li class="li-3">
+                                {% for class_2 in class_of_stock.shenwan_2 %}
+                                    <a id="shenwan_2-{{ class_2 }}" href="/stock/shenwan_2-{{ class_2 }}"></a>
+                                    <div class="title-3" onclick="toStock('shenwan_2-{{ class_2 }}')">{{ class_2 }}</div>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="li-2">
+                        <div class="title-2" onclick="dropDownList('stock-class-1-3', 'stock-class-1')">申万三级行业</div>
+                        <hr style="width: 60%;" />
+                        <ul id="stock-class-1-3" class="ul-3" style="display: none;">
+                            <li class="li-3">
+                                {% for class_3 in class_of_stock.shenwan_3 %}
+                                    <a id="shenwan_3-{{ class_3 }}" href="/stock/shenwan_3-{{ class_3 }}"></a>
+                                    <div class="title-3" onclick="toStock('shenwan_3-{{ class_3 }}')">{{ class_3 }}</div>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="li-2">
+                        <div class="title-2" onclick="">其他行业</div>
+                        <hr style="width: 60%;" />
+                    </li>
+                </ul>
+            </li>
+            <li class="li-1">
+                <div class="title-1" onclick="dropDownList('stock-class-2', '')">概念分类</div>
+                <hr style="width: 80%;" />
+                <ul id="stock-class-2" class="ul-2" style="display: none;">
+                    <li class="li-2">
+                        <div class="title-2" onclick="dropDownList('stock-class-2-1', 'stock-class-2')">热门概念板块</div>
+                        <hr style="width: 60%;" />
+                        <ul id="stock-class-2-1" class="ul-3" style="display: none;">
+                            <li class="li-3">
+                                {% for hot_concept in class_of_stock.hot_concept %}
+                                    <a id="{{ hot_concept }}" href="/stock/hot_concept-{{ hot_concept }}"></a>
+                                    <div class="title-2" onclick="toStock('{{ hot_concept }}')">{{ hot_concept }}</div>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="li-2">
+                        <div class="title-2" onclick="dropDownList('stock-class-2-2', 'stock-class-2')">其他概念板块</div>
+                        <hr style="width: 60%;" />
+                        <ul id="stock-class-2-2" class="ul-3" style="display: none;">
+                            <li class="li-3">
+                                {% for concept in class_of_stock.concept %}
+                                    <a id="{{ concept }}" href="/stock/concept-{{ concept }}"></a>
+                                    <div class="title-2" onclick="toStock('{{ concept }}')">{{ concept }}</div>
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="li-1">
+                <div class="title-1" onclick="dropDownList('stock-class-3', '')">地域分类</div>
+                <hr style="width: 80%;" />
+                <ul id="stock-class-3" class="ul-2" style="display: none;">
+                    <li class="li-2" style="max-height: 400px; overflow: auto;">
+                        {% for place in class_of_stock.place_of_stock %}
+                            <a id="{{ place }}" href="/stock/place-{{ place }}"></a>
+                            <div class="title-2" onclick="toStock('{{ place }}')">{{ place }}</div>
+                        {% endfor %}
+                    </li>
+                </ul>
+            </li>
+            <li class="li-1">
+                <div class="title-1" onclick="dropDownList('stock-class-4', '')">我的自选</div>
+                <hr style="width: 80%;" />
+                <ul id="stock-class-4" class="ul-2" style="display: none;">
+                    <li class="li-2" style="max-height: 400px; overflow: auto;">
+                        {% for select_stock in select_stocks %}
+                            <a id="{{ select_stock.stock_name }}" href="/stock/stock_detail/{{ select_stock.pk }}"></a>
+                            <div class="title-2" onclick="toStock('{{ select_stock.stock_name }}')">{{ select_stock.stock_name }}</div>
+                        {% endfor %}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div id="content-section" class="content-section">
+        <div class="stock-notes">
+            <div class="stock-notes-title">
+                {{ type_name }}
+            </div>
+            <div class="stock-notes-content">
+                <div style="float: left; width: 20%;">最新价格</div>
+                <div style="float: left; width: 20%;">涨跌额</div>
+                <div style="float: left; width: 20%;">涨跌幅</div>
+                <div style="float: left; width: 20%;">最高价格</div>
+                <div style="float: left; width: 20%;">最低价格</div>
+            </div>
+        </div>
+
+        {# 股票列表 #}
+        <ul class="stock-item">
+            {% for stock in stocks %}
+                <li class="stock-list-exhibit">
+                    <a id="{{ stock.stock.pk }}" href="{% url 'stock_detail' stock.stock.pk %}"></a>
+                    <div class="stock-card-left" onclick="toStock('{{ stock.stock.pk }}')">
+                        <div class="stock-card-title">{{ stock.stock.stock_name }}</div>
+                        <div class="stock-card-svg">
+                            <svg class="" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M931.417 46.592h-837.418c-45.611 0-82.568 36.964-82.568 82.564v773.93c0 45.611 36.968 82.568 82.568 82.568h60.952c10.895 0 21.046-4.916 27.911-13.278l200.428-248.489 91.493 75.51c14.627 12.091 36.116 10.597 49.103-3.276l268.057-314.048-7.503 66.229c0 19.78 16.036 35.817 35.817 35.817 19.78 0 35.817-16.036 35.817-35.817l17.841-157.491c0.479-2.222 0.737-4.526 0.78-6.882l0.034-0.298c0-0.062-0.010-0.122-0.011-0.186 0-0.062 0.011-0.122 0.011-0.186 0-19.78-16.036-35.817-35.817-35.817l-164.67 18.655c-19.78 0-35.817 16.036-35.817 35.817 0 19.78 16.036 35.817 35.817 35.817l67.331-7.628-247.24 292.437-93.277-77.003c-7.317-6.121-16.87-8.956-26.417-8.058-9.555 0.887-18.211 5.669-24.333 13.131l-211.884 262.806h-13.47c-22.8 0-41.289-18.466-41.289-41.288v-712.009c0-22.804 18.473-41.289 41.289-41.289h775.496c22.804 0 41.296 18.473 41.296 41.289v712.008c0 22.804-18.473 41.288-41.296 41.288h-372.081c-19.949 0-36.121 16.17-36.121 36.121s16.17 36.121 36.121 36.121h403.048c45.604 0 82.564-36.969 82.564-82.568v-773.93c0-45.605-36.968-82.564-82.564-82.564z"></path>
+                            </svg>
+                        </div>
+                        <div class="stock-card-code">{{ stock.stock.stock_code }}</div>
+                    </div>
+                    <div class="stock-card-mid" onclick="toStock('{{ stock.stock.pk }}')">
+                        <div class="line-height-auto">
+                            <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.last_price }}</div>
+                            <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.diff_price }}</div>
+                            <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.diff_ratio }}</div>
+                            <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.max_price }}</div>
+                            <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.min_price }}</div>
+                        </div>
+                    </div>
+                    <div class="stock-card-right" onclick="selectStock(this, {{ stock.stock.pk }})">
+                        <div class="line-height-auto" style="width: 70%; float: left">
+                            <span>加自选</span>
+                        </div>
+                        <div class="line-height-auto height-auto" style="width: 30%; float: left">
+                            <svg class="margin-auto" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M513.7408 511.6416m-450.816 0a450.816 450.816 0 1 0 901.632 0 450.816 450.816 0 1 0-901.632 0Z" fill="#FF5C64"></path>
+                                <path d="M829.7472 455.8336c25.0368-24.4224 11.2128-66.9696-23.3984-71.9872l-153.6-22.3232a42.30656 42.30656 0 0 1-31.7952-23.0912l-68.7104-139.1616c-15.4624-31.3856-60.2112-31.3856-75.6736 0L407.9104 338.4832a42.21952 42.21952 0 0 1-31.7952 23.0912l-153.6 22.3232c-34.6112 5.0176-48.4352 47.5648-23.3984 71.9872L310.272 564.224a42.2144 42.2144 0 0 1 12.1344 37.376l-26.2144 152.9856c-5.888 34.4576 30.2592 60.7744 61.2352 44.4928l137.3696-72.2432a42.26048 42.26048 0 0 1 39.2704 0l137.3696 72.2432c30.976 16.2816 67.1232-10.0352 61.2352-44.4928l-26.2144-152.9856c-2.3552-13.6704 2.2016-27.648 12.1344-37.376l111.1552-108.3904z m-131.1744-14.0288a28.0064 28.0064 0 0 1-27.4432 22.3232c-1.8944 0-3.7888-0.2048-5.7344-0.5632l-92.8768-19.2512a28.1088 28.1088 0 0 1-19.968-16.128l-30.976-70.144c-6.2464-14.1824 0.1536-30.72 14.336-36.9664 14.1824-6.2464 30.72 0.1536 36.9664 14.336l25.1392 56.9344 78.7456 16.3328c15.2064 3.1232 24.9344 17.92 21.8112 33.1264z" fill="#FFFFFF"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {# 页码 #}
+        <div class="page-bar">
+            <ul class="pagination">
+                <li class="page-sign">
+                    {% if page_of_stocks.has_previous %}
+                        <a href="?page={{ page_of_stocks.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    {% else %}
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    {% endif %}
+                </li>
+                {% for page_num in page_range %}
+                    {% if page_num == page_of_stocks.number %}
+                        <li class="active">
+                            <a href="#">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        {% if page_num == '...' %}
+                            <li><span>{{ page_num }}</span></li>
+                        {% else %}
+                            <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <li class="page-sign">
+                    {% if page_of_stocks.has_next %}
+                        <a href="?page={{ page_of_stocks.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    {% else %}
+                        <a href="#">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        window.onload=function(){
+            var h = document.getElementById("content-section").offsetHeight;
+            Array.prototype.forEach.call(document.getElementsByClassName("stock-notes"), function (element) {
+                element.style.height = (h/17).toString()+"px";
+                element.style.lineHeight = (h/17).toString()+"px";
+            });
+            Array.prototype.forEach.call(document.getElementsByClassName("line-height-auto"), function (element) {
+                element.style.lineHeight = (h/17).toString()+"px";
+            });
+            Array.prototype.forEach.call(document.getElementsByClassName("height-auto"), function (element) {
+                element.style.height = (h/17).toString()+"px";
+            });
+            Array.prototype.forEach.call(document.getElementsByClassName("stock-list-exhibit"), function (element) {
+                element.style.height = (h/17+20).toString()+"px";
+            });
+            Array.prototype.forEach.call(document.getElementsByClassName("margin-auto"), function (element) {
+                element.style.margin = ((h/17-30)/2).toString()+"px 0";
+            });
+            Array.prototype.forEach.call(document.getElementsByClassName("page-bar"), function (element) {
+                element.style.height = (h/17+20).toString()+"px";
+            });
+            if ('{{ type_name }}' === 'industry'){
+                document.getElementById('stock-class-1').style.display = 'block';
+            } else if ('{{ type_name }}' === 'concept') {
+                document.getElementById('stock-class-2').style.display = 'block';
+            } else if ('{{ type_name }}' === 'place') {
+                document.getElementById('stock-class-3').style.display = 'block';
+            }
+        }
+        function toStock(stock_pk_str) {
+            {#点击跳转详情页面#}
+            document.getElementById(stock_pk_str).click();
+        }
+        function selectStock(obj, stock_id){
+            {#自选股票#}
+            $.ajax({
+                url: "{% url 'add_select_stock' %}",
+                type: 'GET',
+                data: {
+                    stock_id: stock_id
+                },
+                cache: false,
+                success: function(data){
+                    console.log(data)
+                    if(data['status']==='SUCCESS'){
+                        // 更新状态
+                        alert(data['message']);
+                    }else{
+                        alert(data['message']);
+                    }
+                },
+                error: function(xhr){
+                    console.log(xhr)
+                }
+            });
+        }
+        function dropDownList(element_id_name, element_id_name_not) {
+            if (document.getElementById(element_id_name).style.display === 'none') {
+                document.getElementById(element_id_name).style.display = 'block ';
+                if (element_id_name_not !== '') {
+                    var dom = document.getElementsByClassName('ul-3');
+                    for (var i=0; i<dom.length; i++) {
+                        if (dom[i].id !== 'stock-class-4' && dom[i].id !== 'stock-class-3' && dom[i].id !== element_id_name && dom[i].style.display === 'block') {
+                            dom[i].style.display = 'none';
+                        }
+                    }
+                    var dom = document.getElementsByClassName('ul-2');
+                    for (var i=0; i<dom.length; i++) {
+                        if (dom[i].id !== element_id_name_not && dom[i].style.display === 'block') {
+                            dom[i].style.display = 'none';
+                        }
+                    }
+                } else {
+                    var dom = document.getElementsByClassName('ul-3');
+                    for (var i=0; i<dom.length; i++) {
+                        dom[i].style.display = 'none';
+                    }
+                    var dom = document.getElementsByClassName('ul-2');
+                    for (var i=0; i<dom.length; i++) {
+                        if (dom[i].id !== element_id_name && dom[i].style.display === 'block') {
+                            dom[i].style.display = 'none';
+                        }
+                    }
+                }
+            } else {
+                document.getElementById(element_id_name).style.display = 'none';
+            }
+        }
+    </script>
+{% endblock %}

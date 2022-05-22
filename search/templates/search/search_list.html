@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{#页面标题#}
+{% block title %}搜索{% endblock %}
+
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'search/search.css' %}">
+{% endblock %}
+
+{#页面内容#}
+{% block content %}
+    <div class="search-container">
+        <div class="search-main" style="">
+            <div>{{ search_word }}</div>
+            <div>
+                {% for stock in search_stocks %}
+                    <a href="{% url 'stock_detail' stock.pk %}"><div>{{ stock.stock_name }}</div></a>
+                {% empty %}
+                    <div>敬请期待</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        window.onload=function(){
+        }
+    </script>
+{% endblock %}
+

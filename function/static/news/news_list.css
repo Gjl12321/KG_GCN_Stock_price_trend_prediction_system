@@ -1,0 +1,134 @@
+.news-list-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: var(--theme-bg-color);
+    /*background-color: var(--content-bg);*/
+    border-radius: 10px;
+}
+
+.news-list-nav {
+    width: 80%;
+    height: 80px;
+    border-radius: 10px;
+    margin: 10px auto 10px;
+    background-color: var(--content-bg);
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.news-nav-item {
+    margin: 0 auto;
+}
+
+.news-nav-item.nav-1 {
+    font-size: 18px;
+    height: 45px;
+    line-height: 40px;
+    border-bottom: 2px solid var(--border-color);
+}
+.news-nav-item.nav-1 a {
+    padding: 10px 20px;
+}
+
+.news-nav-item.nav-2 {
+    font-size: 16px;
+    height: 35px;
+    line-height: 35px;
+}
+.news-nav-item.nav-2 a {
+    padding: 5px 20px;
+}
+
+
+.news-list-nav a {
+    text-decoration: none;
+    color: var(--inactive-color);
+    border-bottom: 2px solid transparent;
+    transition: 0.3s;
+}
+@media screen and (max-width: 610px) {
+    .news-list-nav a:not(.news-header-link) {
+        display: none;
+    }
+}
+.news-list-nav a.is-active, .news-list-nav a:hover {
+    color: var(--theme-color);
+    border-bottom: 2px solid var(--theme-color);
+}
+
+
+
+
+
+.news-list-main {
+    width: 80%;
+    height: 90%;
+    border-radius: 10px;
+    margin: 0 auto 20px;
+    background-color: var(--content-bg);
+    overflow: auto;
+}
+.news-list-exhibit {
+    width: 100%;
+    justify-content: space-around;
+    background-color: var(--content-bg);
+    padding-left: 0;
+    margin: 0;
+    border-radius: 14px;
+    border: 1px solid var(--theme-bg-color);
+    cursor: pointer;
+}
+
+.news-item {
+    color: var(--theme-color);
+    list-style: none;
+    padding: 10px 18px;
+    font-size: 16px;
+    width: 100%;
+    min-height: 40px;
+    /*white-space: nowrap;*/
+    transition: 0.5s;
+    /*line-height: 40px;*/
+}
+.news-item:hover {
+    background-color: var(--theme-bg-color);
+}
+.news-item:hover:first-child {
+    border-radius: 13px 13px 0 0;
+}
+.news-item:hover:last-child {
+    border-radius: 0 0 13px 13px;
+}
+.news-item + li {
+    border-top: 1px solid var(--border-color);
+}
+
+.news-item-date {
+    font-size: 15px;
+    color: #3a6df0;
+    width: 15%;
+    float: left;
+    text-align: center;
+}
+.news-item-content {
+    font-size: 14px;
+    width: 80%;
+    float: left;
+    white-space:normal;
+    word-break:break-all;
+    overflow:hidden;
+}
+.news-item-other {
+    width: 5%;
+    float: right;
+    text-align: right;
+}
+
+
+
+
+
+
+

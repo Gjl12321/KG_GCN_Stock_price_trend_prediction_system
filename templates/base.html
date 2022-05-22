@@ -1,0 +1,158 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{% static 'figures/logo.jpg' %}" type="image/x-icon">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-3.4.1/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{#    <link rel="stylesheet" href="{% static 'css/login.css' %}">#}
+
+    {% block header_extends %}{% endblock %}
+</head>
+<body>
+    <!-- 背景动画 -->
+    <div class="video-bg">
+        <video width="320" height="240" autoplay loop muted>
+            <source src="{% static 'background.mp4' %}" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- 页面 -->
+    <div class="page">
+        <!-- 标题栏 -->
+        <div class="header">
+            <!-- 主标题 -->
+            <div class="menu-title">
+                <span>股票投资辅助系统</span>
+            </div>
+
+            <!-- 导航栏 -->
+            <div class="header-menu">
+                <a class="menu-link {% block menu-link-first %}{% endblock %}" href="{% url 'home' %}">首页</a>
+                {# <a class="menu-link {% block menu-link-stock %}{% endblock %}" href="{% url 'stock_list' %}">股票列表</a> #}
+                {# <a class="menu-link {% block menu-link-kg %}{% endblock %}" href="{% url 'test' %}">知识图谱</a> #}
+            </div>
+
+            <!-- 搜索栏 -->
+            <form class="search-bar" action="{% url 'search' %}">
+                <input type="text" name="search-word" placeholder="Search" autocomplete="off">
+            </form>
+
+
+            <!-- 个性化栏 -->
+            <div class="header-profile">
+                <!-- 头像 -->
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}">
+                        <img id="trigger" class="profile-img" src="#" alt="">
+                    </a>
+                {% else %}
+                    <div class="dropdown">
+                        <button class="user-dropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <img id="user-profile" class="profile-img" src="{% static 'figures/my.jpg' %}" alt="">
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                            <li><a href="#">个人信息</a></li>
+                            <li><a href="#">自选股票</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'logout' %}">退出登录</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- 主页面 -->
+        <div class="wrapper">
+            <!-- 左导航栏 -->
+            <div class="left-side">
+                <div class="side-wrapper">
+                    <div class="side-title">新闻资讯</div>
+                    <div class="side-menu">
+                        <a href="{% url 'news_daily' 'js' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>金十最新资讯</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                        <a href="{% url 'news_daily' 'cls' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>财联社资讯</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                        <a href="{% url 'news_list' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>行业资讯大全</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                    </div>
+                </div>
+                <div class="side-wrapper">
+                    <div class="side-title">股票分类</div>
+                    <div class="side-menu">
+                        <a href="{% url 'stock_list' 'industry' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>股票行业分类</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                        <a href="{% url 'stock_list' 'concept' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>股票概念分类</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                        <a href="{% url 'stock_list' 'place' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>股票地域分类</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                    </div>
+                </div>
+                <div class="side-wrapper">
+                    <div class="side-title">知识图谱</div>
+                    <div class="side-menu">
+                        <a href="{% url 'knowledge_graph' %}">
+                            <div class="sub-side-menu">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>
+                            </div>
+                            <div>股票知识图谱</div>
+                            {# <span class="notification-number updates">3</span> #}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 展示信息 -->
+            {# 内容栏 #}
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="overlay-app"></div>
+    </div>
+
+    <script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+
+    {% block javascript %}{% endblock %}
+
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'bootstrap-3.4.1/js/bootstrap.min.js' %}"></script>
+
+</body>
+</html>
+

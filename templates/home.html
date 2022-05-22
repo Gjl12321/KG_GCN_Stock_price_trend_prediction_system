@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# 页面标题 #}
+{% block title %}
+    股票投资辅助系统 | 首页
+{% endblock %}
+
+{# 拓展 #}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{# 导航栏 #}
+{% block menu-link-first %}
+    is-active
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    <div class="main-container">
+        <div class="content-wrapper">
+            <div class="content-wrapper-header">
+                <div class="content-wrapper-context">
+                    <div class="content-text">欢迎使用股票投资辅助系统！</div>
+                    <a href="{% url 'stock_list' 'all' %}"><button class="content-button">开始使用</button></a>
+                </div>
+                <img class="content-wrapper-img" src="https://assets.codepen.io/3364143/glass.png" alt="">
+            </div>
+
+            <div class="content-section">
+                <div class="content-section-title">股票浏览历史</div>
+                <ul style="width: 95%; margin: 0 auto;">
+                    {% for stock in stocks %}
+                        <li class="stock-list-exhibit">
+                            <a id="{{ stock.stock.pk }}" href="{% url 'stock_detail' stock.stock.pk %}"></a>
+                            <div class="stock-card-left" onclick="toStock('{{ stock.stock.pk }}')">
+                                <div class="stock-card-title">{{ stock.stock.stock_name }}</div>
+                                <div class="stock-card-svg">
+                                    <svg class="" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M931.417 46.592h-837.418c-45.611 0-82.568 36.964-82.568 82.564v773.93c0 45.611 36.968 82.568 82.568 82.568h60.952c10.895 0 21.046-4.916 27.911-13.278l200.428-248.489 91.493 75.51c14.627 12.091 36.116 10.597 49.103-3.276l268.057-314.048-7.503 66.229c0 19.78 16.036 35.817 35.817 35.817 19.78 0 35.817-16.036 35.817-35.817l17.841-157.491c0.479-2.222 0.737-4.526 0.78-6.882l0.034-0.298c0-0.062-0.010-0.122-0.011-0.186 0-0.062 0.011-0.122 0.011-0.186 0-19.78-16.036-35.817-35.817-35.817l-164.67 18.655c-19.78 0-35.817 16.036-35.817 35.817 0 19.78 16.036 35.817 35.817 35.817l67.331-7.628-247.24 292.437-93.277-77.003c-7.317-6.121-16.87-8.956-26.417-8.058-9.555 0.887-18.211 5.669-24.333 13.131l-211.884 262.806h-13.47c-22.8 0-41.289-18.466-41.289-41.288v-712.009c0-22.804 18.473-41.289 41.289-41.289h775.496c22.804 0 41.296 18.473 41.296 41.289v712.008c0 22.804-18.473 41.288-41.296 41.288h-372.081c-19.949 0-36.121 16.17-36.121 36.121s16.17 36.121 36.121 36.121h403.048c45.604 0 82.564-36.969 82.564-82.568v-773.93c0-45.605-36.968-82.564-82.564-82.564z"></path>
+                                    </svg>
+                                </div>
+                                <div class="stock-card-code">{{ stock.stock.stock_code }}</div>
+                            </div>
+                            <div class="stock-card-mid" onclick="toStock('{{ stock.stock.pk }}')">
+                                <div class="line-height-auto">
+                                    <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.last_price }}</div>
+                                    <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.diff_price }}</div>
+                                    <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.diff_ratio }}</div>
+                                    <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.max_price }}</div>
+                                    <div style="float: left; width: 20%; color: {{ stock.sign }};">{{ stock.min_price }}</div>
+                                </div>
+                            </div>
+                            <div class="stock-card-right" onclick="selectStock(this, {{ stock.stock.pk }})">
+                                <div class="line-height-auto" style="width: 70%; float: left">
+                                    <span>加自选</span>
+                                </div>
+                                <div class="line-height-auto height-auto" style="width: 30%; float: left">
+                                    <svg class="margin-auto" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M513.7408 511.6416m-450.816 0a450.816 450.816 0 1 0 901.632 0 450.816 450.816 0 1 0-901.632 0Z" fill="#FF5C64"></path>
+                                        <path d="M829.7472 455.8336c25.0368-24.4224 11.2128-66.9696-23.3984-71.9872l-153.6-22.3232a42.30656 42.30656 0 0 1-31.7952-23.0912l-68.7104-139.1616c-15.4624-31.3856-60.2112-31.3856-75.6736 0L407.9104 338.4832a42.21952 42.21952 0 0 1-31.7952 23.0912l-153.6 22.3232c-34.6112 5.0176-48.4352 47.5648-23.3984 71.9872L310.272 564.224a42.2144 42.2144 0 0 1 12.1344 37.376l-26.2144 152.9856c-5.888 34.4576 30.2592 60.7744 61.2352 44.4928l137.3696-72.2432a42.26048 42.26048 0 0 1 39.2704 0l137.3696 72.2432c30.976 16.2816 67.1232-10.0352 61.2352-44.4928l-26.2144-152.9856c-2.3552-13.6704 2.2016-27.648 12.1344-37.376l111.1552-108.3904z m-131.1744-14.0288a28.0064 28.0064 0 0 1-27.4432 22.3232c-1.8944 0-3.7888-0.2048-5.7344-0.5632l-92.8768-19.2512a28.1088 28.1088 0 0 1-19.968-16.128l-30.976-70.144c-6.2464-14.1824 0.1536-30.72 14.336-36.9664 14.1824-6.2464 30.72 0.1536 36.9664 14.336l25.1392 56.9344 78.7456 16.3328c15.2064 3.1232 24.9344 17.92 21.8112 33.1264z" fill="#FFFFFF"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="last-news">
+                <div class="last-news-title">财联社最新资讯新闻</div>
+                <div class="last-news-contain">
+                    {% for last_news in news %}
+                        <div class="last-news-card">
+                            <div class="last-news-card__subtext">{{ last_news.content }}</div>
+                            <a href="https://www.cls.cn/searchPage?keyword=%E5%BF%AB%E8%AE%AF&type=all">原文链接</a>
+                        </div>
+                    {% empty %}
+                        <div class="last-news-card">
+                            <div id="news-card-1-title" class="last-news-card__subtext">敬请期待！</div>
+                            <span id="news-card-1-time"></span>
+                            <a id="news-card-1-url" href="#">原文链接</a>
+                        </div>
+                        <div class="last-news-card">
+                            <div id="news-card-2-title" class="last-news-card__subtext">敬请期待！</div>
+                            <span id="news-card-2-time"></span>
+                            <a id="news-card-2-url" href="#">原文链接</a>
+                        </div>
+                        <div class="last-news-card">
+                            <div id="news-card-3-title" class="last-news-card__subtext">敬请期待！</div>
+                            <span id="news-card-3-time"></span>
+                            <a id="news-card-3-url" href="#">原文链接</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script src="{% static 'js/home.js' %}"></script>
+{% endblock %}

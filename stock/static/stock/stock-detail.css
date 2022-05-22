@@ -1,0 +1,190 @@
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: var(--theme-bg-color);
+    /*background-color: var(--content-bg);*/
+    border-radius: 10px;
+}
+
+.main-nav {
+    width: 100%;
+    height: 6%;
+    text-align: center;
+}
+.main-nav .title-content {
+    width: 30%;
+    height: 100%;
+    margin: 0 auto;
+    color: var(--content-title-color);
+}
+.main-nav .title-content div {
+    float: left;
+    line-height: 50px;
+    margin: 0 10px;
+}
+
+.main-content {
+    width: 100%;
+    height: 94%;
+}
+
+.main-content .stock-overview {
+    height: 15%;
+    width: 80%;
+    margin: 0 auto;
+}
+.stock-overview .stock-new-price {
+    float: left;
+    width: 20%;
+    min-width: 160px;
+    height: 100%;
+    padding: 0 10px;
+}
+.stock-overview .price-up {
+    color: #d43f3a;
+}
+.stock-overview .price-down {
+    color: #3c763d;
+}
+
+.stock-overview .stock-other-price {
+    float: left;
+    width: 70%;
+    min-width: 350px;
+    height: 100%;
+    text-align: center;
+}
+.stock-other-price td {
+    color: var(--content-title-color);
+    width: 17%;
+    min-width: 80px;
+    line-height: 25px;
+}
+
+
+.main-content .stock-content {
+    height: 90%;
+    /*float: left;*/
+    width: 75%;
+    overflow: auto;
+    margin: 0 auto;
+}
+.main-content .stock-content .stock-img {
+    height: 380px;
+    display: flex;
+    flex-direction: column;
+}
+.stock-img-title {
+    color: var(--content-title-color);
+    margin-bottom: 8px;
+    margin-left: 20px;
+}
+#stock-Echarts {
+    height: 100%;
+    margin: 0 20px;
+    border-radius: 10px;
+    background-color: var(--content-bg);
+    border: 1px solid var(--theme-bg-color);
+}
+
+
+.stock-news {
+    /*height: 300px;*/
+    width: 100%;
+    color: var(--content-title-color);
+    margin-top: 8px;
+}
+.stock-news-title {
+    color: var(--content-title-color);
+    margin-bottom: 8px;
+    margin-left: 20px;
+}
+.stock-news-contain {
+    align-items: center;
+    margin: 0 20px 10px 20px;
+    overflow: hidden;
+}
+.float-sign {
+    float: left;
+    line-height: 200px;
+}
+.float-sign span {
+    color: #d43f3a;
+    font-size: 15px;
+}
+.stock-news-card {
+    width: calc(33.3% - 30px);
+    height: 200px;
+    float: left;
+    font-size: 16px;
+    background-color: var(--content-bg);
+    border-radius: 14px;
+    border: 1px solid var(--theme-bg-color);
+    padding: 20px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin: 0 10px;
+}
+.stock-news-card:hover {
+    transform: scale(1.02);
+    background-color: var(--theme-bg-color);
+}
+.stock-news-card span {
+    display: flex;
+    align-items: center;
+}
+.stock-news-card__subtext {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6em;
+    margin-top: 20px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+}
+
+
+
+.main-content .stock-content .stock-detail {
+
+}
+.company-contain {
+    background-color: var(--content-bg);
+    margin: 0 20px 20px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--theme-bg-color);
+}
+.company-title {
+    color: var(--content-title-color);
+    margin-bottom: 8px;
+    margin-left: 20px;
+}
+#company-info td {
+    color: var(--content-title-color);
+    height: 26px;
+    line-height: 30px;
+    width: 100px;
+    padding: 0 10px;
+    border: 1px solid var(--theme-bg-color);
+}
+
+
+
+
+
+.main-content .stock-price {
+    height: 80%;
+    float: right;
+    width: 25%;
+    overflow: auto;
+}
+
+
+
+
+
+
+
+
+
