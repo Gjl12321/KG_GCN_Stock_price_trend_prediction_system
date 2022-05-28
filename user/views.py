@@ -11,9 +11,12 @@ def logout(request):
     return redirect(request.GET.get('from', reverse('home')))
 
 
-# def user_info(request):
-#     context = {}
-#     return render(request, 'user/user_info.html', context)
+def user_info(request):
+    user = User.objects.get(username=request.user)
+    context = {
+        'user': user
+    }
+    return render(request, 'user/user_info.html', context)
 
 
 def login_and_register(request):

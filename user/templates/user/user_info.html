@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# 页面标题 #}
+{% block title %}
+    股票投资辅助系统 | 个人信息
+{% endblock %}
+
+{# 拓展 #}
+{% block header_extends %}
+    <link rel="stylesheet" href="{% static 'user/user_info.css' %}">
+{% endblock %}
+
+{# 导航栏 #}
+{% block menu-link-first %}
+
+{% endblock %}
+
+{# 页面内容 #}
+{% block content %}
+    <div class="user-container">
+        <div class="user-main">
+            <div style="padding: 60px; color: var(--theme-color); font-size: 32px">个人信息</div>
+            <div style="padding: 20px; color: var(--theme-color); font-size: 20px">{{ user.username }}</div>
+            <div style="padding: 20px; color: var(--theme-color); font-size: 20px">{{ user.email }}</div>
+            <div style="padding: 20px; color: var(--theme-color); font-size: 20px"><a href="#">修改密码</a></div>
+        </div>
+    </div>
+
+    <script></script>
+{% endblock %}
+
+
+
+
+

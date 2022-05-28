@@ -11,17 +11,22 @@
 {#页面内容#}
 {% block content %}
     <div class="search-container">
+        <div class="search-nav" style="">
+            <div style="line-height: 80px; text-align: center; color: var(--theme-color); font-size: 20px;">查询：{{ search_word }} 关键词结果如下：</div>
+        </div>
         <div class="search-main" style="">
-            <div>{{ search_word }}</div>
-            <div>
+            <ul class="search-exhibit">
                 {% for stock in search_stocks %}
-                    <a href="{% url 'stock_detail' stock.pk %}"><div>{{ stock.stock_name }}</div></a>
+                    <li class="search-item">
+                        <a href="{% url 'stock_detail' stock.pk %}"><div>{{ stock.stock_name }}</div></a>
+                    </li>
                 {% empty %}
-                    <div>敬请期待</div>
+                    <li class="search-item">未搜索到结果！</li>
                 {% endfor %}
-            </div>
+            </ul>
         </div>
     </div>
+
 {% endblock %}
 
 {% block javascript %}

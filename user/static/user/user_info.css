@@ -1,0 +1,19 @@
+.user-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: var(--theme-bg-color);
+    /*background-color: var(--content-bg);*/
+    border-radius: 10px;
+}
+
+.user-main {
+    width: 60%;
+    height: 60%;
+    /*padding: 100px;*/
+    border-radius: 10px;
+    margin: 100px auto 20px;
+    background-color: var(--content-bg);
+    overflow: auto;
+    text-align: center;
+}

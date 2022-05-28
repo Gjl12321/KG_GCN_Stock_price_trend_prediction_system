@@ -26,12 +26,12 @@
                         <form action="" method="POST">
                             {% csrf_token %}
                             <h1 class="form-title">注册账号</h1>
-                            <div class="social-container">
-                                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                            <span>或者使用邮箱登陆！</span>
+{#                            <div class="social-container">#}
+{#                                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>#}
+{#                                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>#}
+{#                                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>#}
+{#                            </div>#}
+                            <span>请设置个人信息及账号密码！</span>
                             {% for field in reg_form %}
                                 {{ field }}
                                 <p class="text-danger">{{ field.errors.as_text }}</p>
@@ -44,12 +44,12 @@
                         <form action="" method="POST">
                             {% csrf_token %}
                             <h1 class="form-title">登录</h1>
-                            <div class="social-container">
-                                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                            <span>或者使用账号密码登录！</span>
+{#                            <div class="social-container">#}
+{#                                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>#}
+{#                                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>#}
+{#                                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>#}
+{#                            </div>#}
+                            <span>请使用账号密码登录！</span>
                             {% for field in login_form %}
                                 {{ field }}
                                 <p class="text-danger">{{ field.errors.as_text }}</p>

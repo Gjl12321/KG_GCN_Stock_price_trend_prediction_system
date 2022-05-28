@@ -73,7 +73,7 @@
                 <div class="last-news-contain">
                     {% for last_news in news %}
                         <div class="last-news-card">
-                            <div class="last-news-card__subtext">{{ last_news.content }}</div>
+                            <div class="last-news-card__subtext">{{ last_news.content | truncatechars:80 }}</div>
                             <a href="https://www.cls.cn/searchPage?keyword=%E5%BF%AB%E8%AE%AF&type=all">原文链接</a>
                         </div>
                     {% empty %}

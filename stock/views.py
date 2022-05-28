@@ -138,7 +138,7 @@ def get_page_num(page_num, stocks_all_list):
 
 
 def get_stocks_price(stocks):
-    with open(settings.PRICE_ROOT + '/stock_dict.json', 'r', encoding='utf-8') as rf:
+    with open(settings.DATA_ROOT + '/stock_dict.json', 'r', encoding='utf-8') as rf:
         stock_dict = json.load(rf)
     stock_price = []
     for stock in stocks.object_list:
@@ -167,26 +167,26 @@ def get_stock_class():
         'shenwan_2': [],
         'shenwan_3': []
     }
-    with open(settings.PRICE_ROOT + '/data/申万一级类别.json', 'r') as rf:
+    with open(settings.DATA_ROOT + '/申万一级类别.json', 'r') as rf:
         temp = json.load(rf)
     for k in temp.keys():
         res['shenwan_1'].append(k)
 
-    with open(settings.PRICE_ROOT + '/data/申万二级类别.json', 'r') as rf:
+    with open(settings.DATA_ROOT + '/申万二级类别.json', 'r') as rf:
         temp = json.load(rf)
     for k in temp.keys():
         res['shenwan_2'].append(k)
 
-    with open(settings.PRICE_ROOT + '/data/申万三级类别.json', 'r') as rf:
+    with open(settings.DATA_ROOT + '/申万三级类别.json', 'r') as rf:
         temp = json.load(rf)
     for k in temp.keys():
         res['shenwan_3'].append(k)
 
-    with open(settings.PRICE_ROOT + '/data/地域板块.json', 'r') as rf:
+    with open(settings.DATA_ROOT + '/地域板块.json', 'r') as rf:
         temp = json.load(rf)
     res['place_of_stock'] = list(temp.keys())
 
-    with open(settings.PRICE_ROOT + '/data/热门概念.json', 'r') as rf:
+    with open(settings.DATA_ROOT + '/热门概念.json', 'r') as rf:
         temp = json.load(rf)
     res['hot_concept'] = list(temp.keys())
 
@@ -247,8 +247,8 @@ def number_abbreviation(num):
 
 
 # 公司
-def get_company_info(stock_code, root_path=settings.PRICE_ROOT):
-    with open(root_path + '/data/company_info/'+stock_code+'.json', 'r') as rf:
+def get_company_info(stock_code):
+    with open(settings.DATA_ROOT + '/company_info/'+stock_code+'.json', 'r') as rf:
         temp = json.load(rf)
 
     res = []
@@ -296,20 +296,21 @@ def stock_detail(request, stock_id):
     stock = get_object_or_404(Stock, id=stock_id)
 
     # 价格信息
-    with open(settings.PRICE_ROOT + '/stock_dict.json', 'r', encoding='utf-8') as rf:
+    with open(settings.DATA_ROOT + '/stock_dict.json', 'r', encoding='utf-8') as rf:
         stock_dict = json.load(rf)
     stock_price = stock_dict[stock.stock_code]
 
     # 历史价格信息
-    with open(settings.PRICE_ROOT + '/data/history_price/' + stock.stock_code + '.json', 'r') as rf:
+    with open(settings.DATA_ROOT + '/history_price/' + stock.stock_code + '.json', 'r') as rf:
         history_price = json.load(rf)
 
     # 当前价格信息
     try:
         df = ak.stock_zh_a_spot_em()
         temp = df[df['代码'] == stock.stock_code[2:]]
+        # print(temp)
         temp.reset_index(inplace=True, drop=True)
-        df = ak.stock_individual_info_em(symbol=stock.stock_code[2:])
+        # df = ak.stock_individual_info_em(symbol=stock.stock_code[2:])
 
         data = {
             'new_price': round(temp['最新价'][0], 2),
@@ -326,14 +327,14 @@ def stock_detail(request, stock_id):
             'turnover_ratio': temp['换手率'][0],
             'pe_ratio': temp['市盈率-动态'][0],
             'ptb_ratio': temp['市净率'][0],
-            'total_value': number_abbreviation(df['value'][0]),  # 总市值
-            'circulation_value': number_abbreviation(df['value'][1]),  # 流通市值
-            'total_share_capital': df['value'][6],  # 总股本
-            'tradable_shares': df['value'][7],  # 流通股
+            'total_value': '-',  # number_abbreviation(df['value'][0]),  # 总市值
+            'circulation_value': '-',  # number_abbreviation(df['value'][1]),  # 流通市值
+            'total_share_capital': '-',  # df['value'][6],  # 总股本
+            'tradable_shares': '-',  # df['value'][7],  # 流通股
             'diff_price': temp['最新价'][0]-temp['昨收'][0],
             'diff_ratio': (temp['最新价'][0]-temp['昨收'][0]) / temp['昨收'][0] * 100,
         }
-    except:
+    except Exception as e:
         data = {
             'new_price': '-',
             'Chg': '-',
@@ -354,6 +355,7 @@ def stock_detail(request, stock_id):
             'total_share_capital': '-',
             'tradable_shares': '-'
         }
+        print(e)
 
     # 个股新闻
     try:

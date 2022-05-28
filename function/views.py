@@ -74,30 +74,38 @@ def get_js_news(start_time, end_time):
     return news_list
 
 
-def get_update_news(deadline, next_start_time):
+def get_update_news():
     news_list_daily = []
+
+    deadline = '2022-05-28 23:00:00'
+    next_start_time = '2022-05-28 00:00:00'
     start = [-1, -1, -1, -1, -1]
+
     while True:
         now = time.localtime(time.time())
         now_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
         if now_time >= deadline:
             break
+
         if now[:5] != start:
             print(now_time, end='\t:\t')
             start = now[:5]
             temp = get_js_news(start_time=next_start_time, end_time=now_time)
             length = len(temp)
             next_start_time = temp[-1][0]
+
             for item in temp:
-                item = [item[0], re.sub(r'<.*>', '', item[1]).replace(' ', '')]
-                if item not in news_list_daily and item[1]:
+                if item not in news_list_daily:
                     news_list_daily.append(item)
                 else:
                     length -= 1
-            # settings.PRICE_ROOT + 'data/news/js_news.json'
-            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/news/js_news.json', 'w') as sf:
+
+            with open('F:/data/KG_GCN_Stock_price_trend_prediction_system/news/js_news.json', 'w') as sf:
                 json.dump(news_list_daily, sf)
+
             print(length, len(news_list_daily))
+
             time.sleep(max(0, 50-now[5]))
 
 
@@ -152,7 +160,7 @@ def get_news():
 
     # 金十新闻
     if True:
-        with open(settings.PRICE_ROOT + '/data/news/js_news.json', 'r') as rf:
+        with open(settings.DATA_ROOT + '/news/js_news.json', 'r') as rf:
             temp = json.load(rf)
         result['js'] = [
             {
@@ -182,7 +190,7 @@ def get_news():
 
     # Tushare
     if True:
-        with open(settings.PRICE_ROOT + '/data/news/20220315.json', 'r') as rf:
+        with open(settings.DATA_ROOT + '/news/20220528.json', 'r') as rf:
             temp = json.load(rf)
 
         result['tushare'] = {
@@ -229,7 +237,7 @@ def news_daily(request, news_type):
 
 # 获取子图
 def get_relations(data):
-    graph = Graph("bolt://localhost:7687", auth=("neo4j", "gjl19971213"))
+    graph = Graph("bolt://localhost:11003", auth=("neo4j", "gjl19971213"))
     nodes = []
     links = []
 

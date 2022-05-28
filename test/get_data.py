@@ -16,11 +16,33 @@ from selenium.webdriver.common.action_chains import ActionChains
 from requests.adapters import HTTPAdapter
 
 
+def get_stock_info():
+    df = pd.read_csv('data/stock_price.csv', encoding='utf-8', index_col=0)
+    stock_dict = {}
+    for i in range(df.shape[0]):
+        stock_dict[df['代码'][i]] = {
+            'name': df['名称'][i],
+            'last_price': df['最新价'][i],
+            'diff_price': df['涨跌额'][i],
+            'diff_ratio': df['涨跌幅'][i],
+            'buy': df['买入'][i],
+            'sell': df['卖出'][i],
+            'prior_close': df['昨收'][i],
+            'today_open': df['今开'][i],
+            'max_price': df['最高'][i],
+            'min_price': df['最低'][i],
+            'volume': df['成交量'][i],
+            'turnover': df['成交额'][i]
+        }
+    with open('stock_dict.json', 'w', encoding='utf-8') as sf:
+        json.dump(stock_dict, sf)
+
+
 def get_company_info():
-    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/stock_dict.json', 'r') as rf:
+    with open('F:/data/KG_GCN_Stock_price_trend_prediction_system/stock_dict.json', 'r') as rf:
         temp = json.load(rf)
     stocks = list(temp.keys())
-    browser = webdriver.Chrome(executable_path=r'C:\Program Files\Google\Chrome\Application\chromedriver.exe')
+    browser = webdriver.Chrome(executable_path=r'C:\Users\admin\Desktop\chromedriver_win32\chromedriver.exe')
     for stock_code in stocks:
         url = 'https://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/'+stock_code[2:]+'.phtml'
         try:
@@ -54,7 +76,7 @@ def get_company_info():
 
 
 def get_minute_price():
-    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/stock_dict.json', 'r') as rf:
+    with open('F:/data/KG_GCN_Stock_price_trend_prediction_system/stock_dict.json', 'r') as rf:
         temp = json.load(rf)
 
     for stock_code in temp.keys():
@@ -111,11 +133,13 @@ def get_history_price():
     with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/stock_code_list.json', 'r') as rf:
         stock_code_list = json.load(rf)
     # stock_code_list = ['bj430047']
-    start_date = "19700101"
+    start_date = "20220101"
     today = time.strftime('%Y%m%d', time.localtime(time.time()))
     error_stock_code = []
 
     for stock_code in stock_code_list:
+        start = time.time()
+        print(stock_code[2:], '\t', end='\t')
         try:
             df = ak.stock_zh_a_hist(symbol=stock_code[2:], period='daily', start_date=start_date, end_date=today)
             history_price = {
@@ -145,14 +169,16 @@ def get_history_price():
                     }
                 }
             }
-            with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/history_price/'+stock_code+'.json', 'w') as sf:
+            with open('F:/data/KG_GCN_Stock_price_trend_prediction_system/history_price/'+stock_code+'.json', 'w') as sf:
                 json.dump(history_price, sf)
         except Exception as e:
             print(stock_code, 'error', e)
             error_stock_code.append(stock_code)
         else:
             print(stock_code, 'finish')
-        time.sleep(2)
+
+        print(round(time.time()-start, 2))
+        time.sleep(1)
 
     print(error_stock_code)
 
@@ -397,8 +423,8 @@ def get_js_news(start_time, end_time):
 def get_update_news():
     news_list_daily = []
 
-    deadline = '2022-03-15 23:00:00'
-    next_start_time = '2022-03-15 00:00:00'
+    deadline = '2022-05-28 23:00:00'
+    next_start_time = '2022-05-28 00:00:00'
     start = [-1, -1, -1, -1, -1]
 
     while True:
@@ -421,7 +447,7 @@ def get_update_news():
                 else:
                     length -= 1
 
-            with open('data/js_news.json', 'w') as sf:
+            with open('F:/data/KG_GCN_Stock_price_trend_prediction_system/news/js_news.json', 'w') as sf:
                 json.dump(news_list_daily, sf)
 
             print(length, len(news_list_daily))
@@ -432,8 +458,12 @@ def get_update_news():
 def get_news_info():
     option = webdriver.ChromeOptions()
     option.add_argument('--user-data-dir=C:/Users/admin/AppData/Local/Google/Chrome/User Data')
-    browser = webdriver.Chrome(options=option, executable_path=r'C:\Program Files\Google\Chrome\Application\chromedriver.exe')
+    option.add_argument('--no-sandbox')
+
+    browser = webdriver.Chrome(options=option, executable_path=r'C:\Users\admin\Desktop\chromedriver_win32\chromedriver.exe')
     data = {}
+    browser.get('https://tushare.pro/news/news_sina#102')
+    time.sleep(10)
 
     for url, title in zip([
                 'https://tushare.pro/news/news_sina#102',
@@ -470,18 +500,21 @@ def get_news_info():
 
             print(title, type_name, len(data[title][type_name]))
 
-    with open('F:/python_project/KG_GCN_Stock_price_trend_prediction_system/price/data/news/20220315.json', 'w') as sf:
+    with open('F:/data/KG_GCN_Stock_price_trend_prediction_system/news/20220528.json', 'w') as sf:
         json.dump(data, sf)
 
 
 if __name__ == '__main__':
+
+    # get_history_price()
+
     # get_news()
 
     # get_js_news()
 
-    # get_update_news()
+    get_update_news()
 
-    get_news_info()
+    # get_news_info()
 
     # get_company_info()
 
@@ -493,4 +526,6 @@ if __name__ == '__main__':
 
     # print(get_daily_news())
 
+    # print(ak.stock_individual_info_em(symbol='000001'))
+    # get_news_info()
     print()

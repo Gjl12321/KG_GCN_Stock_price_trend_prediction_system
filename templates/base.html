@@ -49,7 +49,7 @@
                 <!-- 头像 -->
                 {% if not user.is_authenticated %}
                     <a href="{% url 'login' %}">
-                        <img id="trigger" class="profile-img" src="#" alt="">
+                        <img id="trigger" class="profile-img" src="{% static 'figures/个人信息.jpg' %}" alt="">
                     </a>
                 {% else %}
                     <div class="dropdown">
@@ -57,8 +57,7 @@
                             <img id="user-profile" class="profile-img" src="{% static 'figures/my.jpg' %}" alt="">
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                            <li><a href="#">个人信息</a></li>
-                            <li><a href="#">自选股票</a></li>
+                            <li><a href="{% url 'user_info' %}">个人信息</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="{% url 'logout' %}">退出登录</a></li>
                         </ul>

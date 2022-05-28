@@ -134,8 +134,8 @@ STATICFILES_DIRS = [
 ]
 
 
-PRICE_ROOT = os.path.join(BASE_DIR, 'price')
-PRICE_URL = '/price/'
+DATA_ROOT = 'F:/data/KG_GCN_Stock_price_trend_prediction_system'
+
 
 # 全文检索框架的配置
 HAYSTACK_CONNECTIONS = {
